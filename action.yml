@@ -1,0 +1,9 @@
+name: 'Terraform Plan Formatter'
+description: 'Format Terraform plan output into a summary table'
+inputs:
+  plan_output:
+    description: 'The output of terraform plan'
+    required: true
+runs:
+  using: 'node20'
+  main: 'index.js'
