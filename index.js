@@ -11,15 +11,15 @@ function parseTerraformPlan(planOutput) {
 
   const lines = planOutput.split('\n');
   for (const line of lines) {
-    if (line.startsWith('  + ')) {
+    if (line.trim().startsWith('+ ')) {
       summary.create++;
-      summary.resources.push({ action: 'create', resource: line.substring(4) });
-    } else if (line.startsWith('  - ')) {
+      summary.resources.push({ action: 'create', resource: line.trim().substring(2) });
+    } else if (line.trim().startsWith('- ')) {
       summary.destroy++;
-      summary.resources.push({ action: 'destroy', resource: line.substring(4) });
-    } else if (line.startsWith('  ~ ')) {
+      summary.resources.push({ action: 'destroy', resource: line.trim().substring(2) });
+    } else if (line.trim().startsWith('~ ')) {
       summary.update++;
-      summary.resources.push({ action: 'update', resource: line.substring(4) });
+      summary.resources.push({ action: 'update', resource: line.trim().substring(2) });
     }
   }
 
@@ -52,7 +52,6 @@ async function run() {
 
     core.setOutput('summary', markdownTable);
 
-    // Create a summary on the Actions tab
     await core.summary
       .addRaw(markdownTable)
       .write();
@@ -61,5 +60,7 @@ async function run() {
     core.setFailed(error.message);
   }
 }
+
+module.exports = { parseTerraformPlan, generateMarkdownTable, run };
 
 run();
